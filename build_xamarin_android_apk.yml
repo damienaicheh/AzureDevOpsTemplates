@@ -1,0 +1,30 @@
+parameters:
+  xamarinSdkVersion: ''
+  projectFile: ''
+  outputDirectory: ''
+  buildConfiguration: ''
+  apksignerKeystoreFile: ''
+  apksignerKeystorePassword: ''
+  apksignerKeyPassword: ''
+
+steps:
+- script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh ${{ parameters.xamarinSdkVersion }}
+  displayName: 'Select the Xamarin SDK version'
+  enabled: true
+
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '${{ parameters.projectFile }}'
+    outputDirectory: '${{ parameters.outputDirectory }}'
+    configuration: '${{ parameters.buildConfiguration }}'
+
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksign: true
+    apksignerKeystoreFile: '${{ parameters.apksignerKeystoreFile }}'
+    apksignerKeystorePassword: '${{ parameters.apksignerKeystorePassword }}'
+    apksignerKeystoreAlias: '${{ parameters.apksignerKeystoreAlias }}'
+    apksignerKeyPassword: '${{ parameters.apksignerKeyPassword }}'
+    apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.buildConfiguration }}.apk
+    zipalign: true

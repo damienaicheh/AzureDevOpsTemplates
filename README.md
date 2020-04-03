@@ -1,4 +1,4 @@
-# AzureDevOpsTemplates
+# Azure DevOps Templates
 
 This repository is a list of predefined Azure DevOps pipelines templates for Xamarin application.
 
